@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Torneo del puño de oro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Fauna+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0608;
+      --card-bg: rgba(26, 18, 22, 0.95);
+      --card-border: #8c6f3d;
+      --gold: #d4af37;
+      --gold-bright: #f3e5ab;
+      --crimson: #7a0010;
+      --crimson-light: #a81c2e;
+      --text-light: #e8e3d9;
+      --text-dim: #8e8474;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 30%, #2a080c 0%, transparent 70%),
+        radial-gradient(circle at 50% 80%, #120205 0%, transparent 90%);
+      color: var(--text-light);
+      font-family: 'Fauna One', serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Borde temático estilo marco de Foundry */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 5px; left: 5px; right: 5px; bottom: 5px;
+      border: 1px solid rgba(140, 111, 61, 0.3);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    header {
+      text-align: center;
+      padding: 10px 10px 5px 10px;
+      border-bottom: 2px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.6rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4), 2px 2px 4px #000;
+    }
+
+    .announcer-bar {
+      font-family: 'Cinzel', serif;
+      color: var(--gold-bright);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-top: 3px;
+      height: 20px;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .bracket-container {
+      display: flex;
+      gap: 15px;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-grow: 1;
+      padding: 10px;
+      width: 100%;
+      height: calc(100% - 100px);
+    }
+
+    .round {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      flex: 1;
+      max-width: 280px;
+      height: 100%;
+    }
+
+    .round-title {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      text-align: center;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--crimson);
+      padding-bottom: 4px;
+      margin-bottom: 5px;
+    }
+
+    .match {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .slot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(140, 111, 61, 0.15);
+      transition: background 0.2s;
+    }
+
+    .slot:last-child { border-bottom: none; }
+
+    .slot:hover {
+      background: rgba(122, 0, 16, 0.35);
+    }
+
+    .fighter-name {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      flex-grow: 1;
+      outline: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.1s ease;
+    }
+
+    /* EFECTOS DE ANIMACIÓN DE SORTEO */
+    .slot.shuffling {
+      background: rgba(212, 175, 55, 0.12);
+      border-color: rgba(212, 175, 55, 0.6);
+    }
+
+    .slot.shuffling .fighter-name {
+      color: var(--gold);
+      filter: blur(0.5px);
+      transform: scale(0.98);
+      opacity: 0.85;
+    }
+
+    .slot.locked-flash {
+      animation: flashGold 0.6s ease-out;
+    }
+
+    @keyframes flashGold {
+      0% { background: var(--gold); color: #000; }
+      100% { background: var(--card-bg); }
+    }
+
+    .win-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--gold);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+
+    .slot:hover .win-btn {
+      opacity: 1;
+      background: var(--crimson);
+      border-color: var(--gold);
+    }
+
+    .slot.winner {
+      background: linear-gradient(90deg, rgba(122,0,16,0.7) 0%, rgba(26,18,22,1) 100%);
+      border-left: 3px solid var(--gold);
+    }
+
+    .slot.winner .fighter-name {
+      color: var(--gold-bright);
+      text-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
+    }
+
+    .slot.loser {
+      opacity: 0.35;
+    }
+
+    .slot.loser .fighter-name {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+
+    .champion-box {
+      background: linear-gradient(135deg, #2a080c 0%, #1a1216 100%);
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      padding: 15px;
+      text-align: center;
+      border-radius: 6px;
+    }
+
+    .champion-box h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      margin: 0 0 5px 0;
+      font-size: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .champion-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 10px var(--gold);
+      min-height: 25px;
+    }
+
+    footer {
+      padding: 5px;
+      text-align: center;
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn {
+      font-family: 'Cinzel', serif;
+      background: var(--crimson);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold);
+      padding: 5px 15px;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--crimson-light);
+      box-shadow: 0 0 8px var(--crimson-light);
+    }
+
+    .btn-secondary {
+      background: #2a1f12;
+      color: var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: #42321c;
+      box-shadow: 0 0 8px var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gran Torneo del puño de oro XI</h1>
+    <div class="announcer-bar" id="announcer">Presiona 'Sortear Combate 1' para comenzar el sorteo...</div>
+  </header>
+
+  <div class="bracket-container">
+    
+    <!-- CUARTOS DE FINAL -->
+    <div class="round">
+      <div class="round-title">Cuartos de Final</div>
+      
+      <div class="match">
+        <div class="slot" id="slot-p1" onclick="selectWinner(1, 'p1', 'p2', 'target-p9')">
+          <span class="fighter-name" id="name-p1" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p2" onclick="selectWinner(1, 'p2', 'p1', 'target-p9')">
+          <span class="fighter-name" id="name-p2" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="slot" id="slot-p3" onclick="selectWinner(2, 'p3', 'p4', 'target-p10')">
+          <span class="fighter-name" id="name-p3" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p4" onclick="selectWinner(2, 'p4', 'p3', 'target-p10')">
+          <span class="fighter-name" id="name-p4" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="slot" id="slot-p5" onclick="selectWinner(3, 'p5', 'p6', 'target-p11')">
+          <span class="fighter-name" id="name-p5" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p6" onclick="selectWinner(3, 'p6', 'p5', 'target-p11')">
+          <span class="fighter-name" id="name-p6" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="slot" id="slot-p7" onclick="selectWinner(4, 'p7', 'p8', 'target-p12')">
+          <span class="fighter-name" id="name-p7" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p8" onclick="selectWinner(4, 'p8', 'p7', 'target-p12')">
+          <span class="fighter-name" id="name-p8" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SEMIFINALES -->
+    <div class="round">
+      <div class="round-title">Semifinales</div>
+
+      <div class="match">
+        <div class="slot" id="slot-p9" onclick="selectWinner(5, 'p9', 'p10', 'target-p13')">
+          <span class="fighter-name" id="target-p9" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p10" onclick="selectWinner(5, 'p10', 'p9', 'target-p13')">
+          <span class="fighter-name" id="target-p10" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="slot" id="slot-p11" onclick="selectWinner(6, 'p11', 'p12', 'target-p14')">
+          <span class="fighter-name" id="target-p11" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p12" onclick="selectWinner(6, 'p12', 'p11', 'target-p14')">
+          <span class="fighter-name" id="target-p12" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GRAN FINAL -->
+    <div class="round">
+      <div class="round-title">Gran Final</div>
+
+      <div class="match">
+        <div class="slot" id="slot-p13" onclick="selectWinner(7, 'p13', 'p14', 'target-champion')">
+          <span class="fighter-name" id="target-p13" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+        <div class="slot" id="slot-p14" onclick="selectWinner(7, 'p14', 'p13', 'target-champion')">
+          <span class="fighter-name" id="target-p14" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <button class="win-btn">⚔</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CAMPEÓN -->
+    <div class="round">
+      <div class="champion-box">
+        <h3>👑 Campeón 👑</h3>
+        <div class="champion-name" id="target-champion">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <button class="btn btn-secondary" id="btn-next" onclick="drawNextMatch()">🎲 Sortear Combate 1</button>
+    <button class="btn" onclick="resetBracket()">Reiniciar Torneo</button>
+  </footer>
+
+  <script>
+    // --- SINTETIZADOR DE SONIDO (Web Audio API) ---
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Sonido corto de tictac / girar rueda
+    function playTickSound() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320 + Math.random() * 150, audioCtx.currentTime);
+      
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.03);
+    }
+
+    // Sonido épico al fijar el combate (Impacto grave + arpegio dorado)
+    function playLockSound() {
+      if (!audioCtx) return;
+
+      // 1. Impacto de bombo/tambor grave
+      const drum = audioCtx.createOscillator();
+      const drumGain = audioCtx.createGain();
+      drum.type = 'sine';
+      drum.frequency.setValueAtTime(140, audioCtx.currentTime);
+      drum.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + 0.35);
+      
+      drumGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      drumGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      
+      drum.connect(drumGain);
+      drumGain.connect(audioCtx.destination);
+      
+      drum.start();
+      drum.stop(audioCtx.currentTime + 0.35);
+
+      // 2. Acorde metálico/dorado resplandeciente (Do - Mi - Sol - Do)
+      const chordNotes = [523.25, 659.25, 783.99, 1046.50];
+      chordNotes.forEach((freq, index) => {
+        const chime = audioCtx.createOscillator();
+        const chimeGain = audioCtx.createGain();
+        const startTime = audioCtx.currentTime + (index * 0.04);
+        
+        chime.type = 'triangle';
+        chime.frequency.setValueAtTime(freq, startTime);
+        
+        chimeGain.gain.setValueAtTime(0.12, startTime);
+        chimeGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+        
+        chime.connect(chimeGain);
+        chimeGain.connect(audioCtx.destination);
+        
+        chime.start(startTime);
+        chime.stop(startTime + 0.4);
+      });
+    }
+
+    // --- LÓGICA DEL TORNEO ---
+    const namePool = [
+      "Leronesh Tantano", "Vorian Morvath", "Rurik Cordell", "Pell Vayne",
+      "Draven Merrosett", "Grosk Voth", "Valerio Delatorre", "Calder Breen"
+    ];
+
+    const matchPairs = [
+      { ids: ['p1', 'p2'], name1: 'Leronesh Tantano', name2: 'Vorian Morvath', msg: "⚔️ Combate 1: Leronesh Tantano vs Vorian Morvath" },
+      { ids: ['p3', 'p4'], name1: 'Rurik Cordell', name2: 'Pell Vayne', msg: "⚔️ Combate 2: Rurik Cordell vs Pell Vayne" },
+      { ids: ['p5', 'p6'], name1: 'Draven Merrosett', name2: 'Grosk Voth', msg: "⚔️ Combate 3: Draven Merrosett vs Grosk Voth" },
+      { ids: ['p7', 'p8'], name1: 'Valerio Delatorre', name2: 'Calder Breen', msg: "⚔️ Combate 4: Valerio Delatorre vs Calder Breen" }
+    ];
+
+    let currentMatchIndex = 0;
+    let isDrawing = false;
+
+    function drawNextMatch() {
+      initAudio(); // Activa el motor de audio con la interacción del usuario
+
+      if (isDrawing) return;
+
+      if (currentMatchIndex >= matchPairs.length) {
+        document.getElementById('announcer').innerText = "¡Todos los combates ya han sido sorteados!";
+        return;
+      }
+
+      isDrawing = true;
+      const pair = matchPairs[currentMatchIndex];
+      
+      document.getElementById('announcer').innerText = `🎲 Sorteando Combate ${currentMatchIndex + 1}...`;
+
+      // Iniciar efecto ruleta + sonido en las dos casillas
+      const shuffleIntervals = {};
+      pair.ids.forEach(id => {
+        const slotEl = document.getElementById(`slot-${id}`);
+        const nameEl = document.getElementById(`name-${id}`);
+        slotEl.classList.add('shuffling');
+
+        shuffleIntervals[id] = setInterval(() => {
+          const randomName = namePool[Math.floor(Math.random() * namePool.length)];
+          nameEl.innerText = randomName;
+          playTickSound(); // Sonido de rueda girando
+        }, 65);
+      });
+
+      // Detener tras 1.5 segundos y fijar luchadores reales
+      setTimeout(() => {
+        pair.ids.forEach((id, idx) => {
+          clearInterval(shuffleIntervals[id]);
+          const slotEl = document.getElementById(`slot-${id}`);
+          const nameEl = document.getElementById(`name-${id}`);
+          
+          slotEl.classList.remove('shuffling');
+          slotEl.classList.add('locked-flash');
+          nameEl.innerText = idx === 0 ? pair.name1 : pair.name2;
+
+          setTimeout(() => slotEl.classList.remove('locked-flash'), 600);
+        });
+
+        playLockSound(); // Sonido especial de fijación / destello
+
+        document.getElementById('announcer').innerText = pair.msg;
+        currentMatchIndex++;
+        isDrawing = false;
+
+        const btnNext = document.getElementById('btn-next');
+        if (currentMatchIndex < matchPairs.length) {
+          btnNext.innerText = `🎲 Sortear Combate ${currentMatchIndex + 1}`;
+        } else {
+          btnNext.innerText = "✓ Sorteo Completo";
+        }
+      }, 1500);
+    }
+
+    function selectWinner(matchId, winnerId, loserId, targetSlotId) {
+      if (isDrawing) return;
+
+      const winnerSlot = document.getElementById(`slot-${winnerId}`);
+      const loserSlot = document.getElementById(`slot-${loserId}`);
+      const winnerNameSpan = winnerSlot.querySelector('.fighter-name');
+      const winnerName = winnerNameSpan.innerText.trim();
+
+      if (!winnerName || winnerName === '—') return;
+
+      winnerSlot.classList.add('winner');
+      winnerSlot.classList.remove('loser');
+      loserSlot.classList.add('loser');
+      loserSlot.classList.remove('winner');
+
+      const targetElement = document.getElementById(targetSlotId);
+      if (targetElement) {
+        targetElement.innerText = winnerName;
+      }
+
+      document.getElementById('announcer').innerText = `¡${winnerName} avanza a la siguiente ronda!`;
+    }
+
+    function resetBracketState() {
+      currentMatchIndex = 0;
+      isDrawing = false;
+
+      document.querySelectorAll('.slot').forEach(slot => {
+        slot.classList.remove('winner', 'loser', 'shuffling', 'locked-flash');
+      });
+
+      const targetsToReset = [
+        'name-p1', 'name-p2', 'name-p3', 'name-p4', 'name-p5', 'name-p6', 'name-p7', 'name-p8',
+        'target-p9', 'target-p10', 'target-p11', 'target-p12', 'target-p13', 'target-p14', 'target-champion'
+      ];
+
+      targetsToReset.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = '—';
+      });
+
+      const btnNext = document.getElementById('btn-next');
+      if (btnNext) btnNext.innerText = "🎲 Sortear Combate 1";
+    }
+
+    function resetBracket() {
+      if (!confirm('¿Deseas reiniciar todo el torneo?')) return;
+      resetBracketState();
+      document.getElementById('announcer').innerText = "Presiona 'Sortear Combate 1' para comenzar el sorteo...";
+    }
+  </script>
+
+</body>
+</html>
