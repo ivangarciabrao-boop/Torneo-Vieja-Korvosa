@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torneo del puño de oro</title>
+  <title>Torneo de Villa Vieja — Korvosa</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Fauna+One&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -36,7 +36,6 @@
       flex-direction: column;
     }
 
-    /* Borde temático estilo marco de Foundry */
     body::before {
       content: '';
       position: absolute;
@@ -57,7 +56,7 @@
     h1 {
       font-family: 'Cinzel', serif;
       color: var(--gold);
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -145,7 +144,6 @@
       transition: all 0.1s ease;
     }
 
-    /* EFECTOS DE ANIMACIÓN DE SORTEO */
     .slot.shuffling {
       background: rgba(212, 175, 55, 0.12);
       border-color: rgba(212, 175, 55, 0.6);
@@ -271,8 +269,8 @@
 <body>
 
   <header>
-    <h1>Gran Torneo del puño de oro XI</h1>
-    <div class="announcer-bar" id="announcer">Presiona 'Sortear Combate 1' para comenzar el sorteo...</div>
+    <h1>Gran Torneo de Villa Vieja</h1>
+    <div class="announcer-bar" id="announcer">Presiona 'Sortear Combate 1' para comenzar...</div>
   </header>
 
   <div class="bracket-container">
@@ -283,44 +281,44 @@
       
       <div class="match">
         <div class="slot" id="slot-p1" onclick="selectWinner(1, 'p1', 'p2', 'target-p9')">
-          <span class="fighter-name" id="name-p1" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p1" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p2" onclick="selectWinner(1, 'p2', 'p1', 'target-p9')">
-          <span class="fighter-name" id="name-p2" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p2" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
 
       <div class="match">
         <div class="slot" id="slot-p3" onclick="selectWinner(2, 'p3', 'p4', 'target-p10')">
-          <span class="fighter-name" id="name-p3" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p3" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p4" onclick="selectWinner(2, 'p4', 'p3', 'target-p10')">
-          <span class="fighter-name" id="name-p4" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p4" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
 
       <div class="match">
         <div class="slot" id="slot-p5" onclick="selectWinner(3, 'p5', 'p6', 'target-p11')">
-          <span class="fighter-name" id="name-p5" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p5" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p6" onclick="selectWinner(3, 'p6', 'p5', 'target-p11')">
-          <span class="fighter-name" id="name-p6" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p6" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
 
       <div class="match">
         <div class="slot" id="slot-p7" onclick="selectWinner(4, 'p7', 'p8', 'target-p12')">
-          <span class="fighter-name" id="name-p7" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p7" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p8" onclick="selectWinner(4, 'p8', 'p7', 'target-p12')">
-          <span class="fighter-name" id="name-p8" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="name-p8" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
@@ -333,22 +331,22 @@
 
       <div class="match">
         <div class="slot" id="slot-p9" onclick="selectWinner(5, 'p9', 'p10', 'target-p13')">
-          <span class="fighter-name" id="target-p9" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p9" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p10" onclick="selectWinner(5, 'p10', 'p9', 'target-p13')">
-          <span class="fighter-name" id="target-p10" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p10" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
 
       <div class="match">
         <div class="slot" id="slot-p11" onclick="selectWinner(6, 'p11', 'p12', 'target-p14')">
-          <span class="fighter-name" id="target-p11" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p11" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p12" onclick="selectWinner(6, 'p12', 'p11', 'target-p14')">
-          <span class="fighter-name" id="target-p12" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p12" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
@@ -361,11 +359,11 @@
 
       <div class="match">
         <div class="slot" id="slot-p13" onclick="selectWinner(7, 'p13', 'p14', 'target-champion')">
-          <span class="fighter-name" id="target-p13" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p13" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
         <div class="slot" id="slot-p14" onclick="selectWinner(7, 'p14', 'p13', 'target-champion')">
-          <span class="fighter-name" id="target-p14" contenteditable="true" onclick="event.stopPropagation()">—</span>
+          <span class="fighter-name" id="target-p14" contenteditable="true" onblur="saveState()" onclick="event.stopPropagation()">—</span>
           <button class="win-btn">⚔</button>
         </div>
       </div>
@@ -388,7 +386,7 @@
   </footer>
 
   <script>
-    // --- SINTETIZADOR DE SONIDO (Web Audio API) ---
+    // --- SINTETIZADOR DE SONIDO ---
     let audioCtx = null;
 
     function initAudio() {
@@ -400,61 +398,45 @@
       }
     }
 
-    // Sonido corto de tictac / girar rueda
     function playTickSound() {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(320 + Math.random() * 150, audioCtx.currentTime);
-      
       gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
-      
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-      
       osc.start();
       osc.stop(audioCtx.currentTime + 0.03);
     }
 
-    // Sonido épico al fijar el combate (Impacto grave + arpegio dorado)
     function playLockSound() {
       if (!audioCtx) return;
-
-      // 1. Impacto de bombo/tambor grave
       const drum = audioCtx.createOscillator();
       const drumGain = audioCtx.createGain();
       drum.type = 'sine';
       drum.frequency.setValueAtTime(140, audioCtx.currentTime);
       drum.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + 0.35);
-      
       drumGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
       drumGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-      
       drum.connect(drumGain);
       drumGain.connect(audioCtx.destination);
-      
       drum.start();
       drum.stop(audioCtx.currentTime + 0.35);
 
-      // 2. Acorde metálico/dorado resplandeciente (Do - Mi - Sol - Do)
       const chordNotes = [523.25, 659.25, 783.99, 1046.50];
       chordNotes.forEach((freq, index) => {
         const chime = audioCtx.createOscillator();
         const chimeGain = audioCtx.createGain();
         const startTime = audioCtx.currentTime + (index * 0.04);
-        
         chime.type = 'triangle';
         chime.frequency.setValueAtTime(freq, startTime);
-        
         chimeGain.gain.setValueAtTime(0.12, startTime);
         chimeGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
-        
         chime.connect(chimeGain);
         chimeGain.connect(audioCtx.destination);
-        
         chime.start(startTime);
         chime.stop(startTime + 0.4);
       });
@@ -477,7 +459,7 @@
     let isDrawing = false;
 
     function drawNextMatch() {
-      initAudio(); // Activa el motor de audio con la interacción del usuario
+      initAudio();
 
       if (isDrawing) return;
 
@@ -491,7 +473,6 @@
       
       document.getElementById('announcer').innerText = `🎲 Sorteando Combate ${currentMatchIndex + 1}...`;
 
-      // Iniciar efecto ruleta + sonido en las dos casillas
       const shuffleIntervals = {};
       pair.ids.forEach(id => {
         const slotEl = document.getElementById(`slot-${id}`);
@@ -501,11 +482,10 @@
         shuffleIntervals[id] = setInterval(() => {
           const randomName = namePool[Math.floor(Math.random() * namePool.length)];
           nameEl.innerText = randomName;
-          playTickSound(); // Sonido de rueda girando
+          playTickSound();
         }, 65);
       });
 
-      // Detener tras 1.5 segundos y fijar luchadores reales
       setTimeout(() => {
         pair.ids.forEach((id, idx) => {
           clearInterval(shuffleIntervals[id]);
@@ -519,7 +499,7 @@
           setTimeout(() => slotEl.classList.remove('locked-flash'), 600);
         });
 
-        playLockSound(); // Sonido especial de fijación / destello
+        playLockSound();
 
         document.getElementById('announcer').innerText = pair.msg;
         currentMatchIndex++;
@@ -531,6 +511,8 @@
         } else {
           btnNext.innerText = "✓ Sorteo Completo";
         }
+
+        saveState(); // Guardado automático
       }, 1500);
     }
 
@@ -555,11 +537,74 @@
       }
 
       document.getElementById('announcer').innerText = `¡${winnerName} avanza a la siguiente ronda!`;
+      saveState(); // Guardado automático
+    }
+
+    // --- GUARDADO Y CARGA EN LOCALSTORAGE ---
+    function saveState() {
+      const state = {
+        currentMatchIndex: currentMatchIndex,
+        announcer: document.getElementById('announcer').innerText,
+        btnText: document.getElementById('btn-next').innerText,
+        slots: {},
+        targets: {}
+      };
+
+      document.querySelectorAll('.slot').forEach(slot => {
+        const nameSpan = slot.querySelector('.fighter-name');
+        state.slots[slot.id] = {
+          text: nameSpan ? nameSpan.innerText : '—',
+          isWinner: slot.classList.contains('winner'),
+          isLoser: slot.classList.contains('loser')
+        };
+      });
+
+      const targets = ['target-p9', 'target-p10', 'target-p11', 'target-p12', 'target-p13', 'target-p14', 'target-champion'];
+      targets.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) state.targets[id] = el.innerText;
+      });
+
+      localStorage.setItem('torneo_villa_vieja_data', JSON.stringify(state));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('torneo_villa_vieja_data');
+      if (!saved) return;
+
+      try {
+        const state = JSON.parse(saved);
+        currentMatchIndex = state.currentMatchIndex || 0;
+        if (state.announcer) document.getElementById('announcer').innerText = state.announcer;
+        if (state.btnText) document.getElementById('btn-next').innerText = state.btnText;
+
+        if (state.slots) {
+          Object.keys(state.slots).forEach(slotId => {
+            const slotEl = document.getElementById(slotId);
+            if (slotEl) {
+              const nameSpan = slotEl.querySelector('.fighter-name');
+              if (nameSpan) nameSpan.innerText = state.slots[slotId].text;
+              if (state.slots[slotId].isWinner) slotEl.classList.add('winner');
+              if (state.slots[slotId].isLoser) slotEl.classList.add('loser');
+            }
+          });
+        }
+
+        if (state.targets) {
+          Object.keys(state.targets).forEach(targetId => {
+            const el = document.getElementById(targetId);
+            if (el) el.innerText = state.targets[targetId];
+          });
+        }
+      } catch (e) {
+        console.error("Error al cargar estado previo del torneo", e);
+      }
     }
 
     function resetBracketState() {
       currentMatchIndex = 0;
       isDrawing = false;
+      localStorage.removeItem('torneo_villa_vieja_data'); // Borra datos guardados
 
       document.querySelectorAll('.slot').forEach(slot => {
         slot.classList.remove('winner', 'loser', 'shuffling', 'locked-flash');
@@ -580,10 +625,14 @@
     }
 
     function resetBracket() {
-      if (!confirm('¿Deseas reiniciar todo el torneo?')) return;
+      if (!confirm('¿Deseas reiniciar todo el torneo? Se borrarán los datos guardados.')) return;
       resetBracketState();
       document.getElementById('announcer').innerText = "Presiona 'Sortear Combate 1' para comenzar el sorteo...";
     }
+
+    window.onload = () => {
+      loadState();
+    };
   </script>
 
 </body>
